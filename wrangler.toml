@@ -9,3 +9,10 @@ binding = "ASSETS"
 
 [observability]
 enabled = true
+
+[vars]
+NEXT_PUBLIC_SUPABASE_URL = "https://dbpntvkkwjcqbzfgwobi.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRicG50dmtrd2pjcWJ6Zmd3b2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwODExNjYsImV4cCI6MjA4NjY1NzE2Nn0.PoNGMB8Z7sxaF095ULhIcAqGzqbNhiOcQXbb_NWOD_M"
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME = "dttmcsqsj"
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET = "ml_default"
+NEXT_PUBLIC_SITE_URL = "https://newslan.id"
