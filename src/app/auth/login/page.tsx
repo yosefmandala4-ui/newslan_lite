@@ -20,15 +20,18 @@ export default function LoginPage() {
         setLoading(true)
         setError(null)
 
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        })
+        try {
+            const { error: signInError } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            })
 
-        if (error) {
-            setError(error.message)
-            setLoading(false)
-        } else {
+            if (signInError) {
+                setError(signInError.message)
+                setLoading(false)
+                return
+            }
+
             // Check if user is admin
             const { data: { user } } = await supabase.auth.getUser()
 
@@ -49,6 +52,10 @@ export default function LoginPage() {
             }
 
             router.refresh()
+        } catch (err: any) {
+            console.error('Login Error:', err)
+            setError(err.message || 'Terjadi kesalahan sistem yang tidak terduga.')
+            setLoading(false)
         }
     }
 
