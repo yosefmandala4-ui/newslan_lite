@@ -117,7 +117,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
         ])
 
         // 3. Fire-and-forget View Increment (Non-blocking)
-        supabase.rpc('increment_article_views', { article_id: article.id }).then(({ error }) => {
+        supabase.rpc('increment_article_views', { article_id: article.id }).then(({ error }: any) => {
             if (error) console.error('RPC Error:', error)
         })
 
