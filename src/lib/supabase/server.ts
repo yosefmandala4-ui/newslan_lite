@@ -1,16 +1,24 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
+// Dummy client to safely handle missing env vars at build time without crashing or hanging
+const dummySupabase: any = new Proxy({}, {
+    get: (target, prop) => {
+        if (prop === 'then') return undefined; // Prevent infinite await hangs
+        if (prop === 'data') return null;
+        if (prop === 'error') return new Error('Missing Config');
+        if (prop === 'count') return 0;
+        return () => dummySupabase; // Allow infinite chaining like .from().select().eq().single()
+    }
+});
+
 export async function createClient() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
     if (!supabaseUrl || !supabaseKey) {
         console.error('Supabase URL or Key is missing!')
-        // Return a proxy object that handles calls gracefully to avoid crashes
-        return new Proxy({} as any, {
-            get: () => () => ({ from: () => ({ select: () => ({ data: null, error: new Error('Missing Config') }) }) })
-        })
+        return dummySupabase;
     }
 
     const cookieStore = await cookies()
@@ -42,9 +50,7 @@ export function createPublicClient() {
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
     if (!supabaseUrl || !supabaseKey) {
-        return new Proxy({} as any, {
-            get: () => () => ({ from: () => ({ select: () => ({ data: null, error: new Error('Missing Config') }) }) })
-        })
+        return dummySupabase;
     }
 
     return createServerClient(
@@ -64,9 +70,7 @@ export function createAdminClient() {
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
     if (!supabaseUrl || !supabaseKey) {
-        return new Proxy({} as any, {
-            get: () => () => ({ from: () => ({ select: () => ({ data: null, error: new Error('Missing Config') }) }) })
-        })
+        return dummySupabase;
     }
 
     return createServerClient(
