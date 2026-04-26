@@ -70,7 +70,7 @@ export default async function NewsIndexPage({ searchParams }: { searchParams: Pr
                     {/* Main Content */}
                     <div className="lg:col-span-8">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {articles?.map((article) => (
+                            {articles?.map((article: any) => (
                                 <Link
                                     key={article.id}
                                     href={`/news/${article.slug}`}
