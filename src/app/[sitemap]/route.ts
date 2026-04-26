@@ -40,7 +40,7 @@ export async function GET(
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${sitemaps.map(url => `
+  ${sitemaps.map((url: string) => `
   <sitemap>
     <loc>${url}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
@@ -59,11 +59,11 @@ export async function GET(
   if (sitemap === 'sitemap-pages.xml') {
     const staticPages = ['', '/news', '/redaksi', '/privacy-policy', '/pedoman-media-siber', '/indeks']
     const { data: categories } = await supabase.from('categories').select('slug')
-    const allPages = [...staticPages, ...(categories || []).map(cat => `/category/${cat.slug}`)]
+    const allPages = [...staticPages, ...(categories || []).map((cat: any) => `/category/${cat.slug}`)]
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${allPages.map(path => `
+  ${allPages.map((path: string) => `
   <url>
     <loc>${SITE_URL}${path}</loc>
     <lastmod>${new Date().toISOString()}</lastmod>
@@ -97,7 +97,7 @@ export async function GET(
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-  ${(articles || []).map(a => `
+  ${(articles || []).map((a: any) => `
   <url>
     <loc>${SITE_URL}/news/${a.slug}</loc>
     <news:news>
@@ -136,7 +136,7 @@ export async function GET(
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${(articles || []).map(a => `
+  ${(articles || []).map((a: any) => `
   <url>
     <loc>${SITE_URL}/news/${a.slug}</loc>
     <lastmod>${new Date(a.updated_at).toISOString()}</lastmod>
