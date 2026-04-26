@@ -6,7 +6,7 @@ export async function updateSession(request: NextRequest) {
     const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
     // Skip auth if env vars are missing (e.g. during build or misconfiguration)
-    if (!supabaseUrl || !supabaseKey) {
+    if (!supabaseUrl || !supabaseKey || supabaseUrl === 'undefined' || supabaseKey === 'undefined') {
         return NextResponse.next({ request })
     }
 
