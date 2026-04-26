@@ -45,6 +45,9 @@ export default async function RootLayout({
             dangerouslySetInnerHTML={{ __html: settings.header_scripts }}
           />
         )}
+        <div id="debug-env" style={{ display: 'none' }}>
+          SUPABASE_URL: {process.env.NEXT_PUBLIC_SUPABASE_URL || 'MISSING'}
+        </div>
         {children}
       </body>
     </html>
