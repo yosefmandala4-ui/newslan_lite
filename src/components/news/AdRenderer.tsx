@@ -1,0 +1,135 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
+import ProductAd from './ProductAd'
+
+interface AdRendererProps {
+    ad: {
+        id?: string
+        type: 'image' | 'html' | 'product_list'
+        image_url?: string
+        link_url?: string
+        html_content?: string
+        title?: string
+        width?: number | null
+        height?: number | null
+    } | null
+    className?: string
+    isSidebar?: boolean
+}
+
+export default function AdRenderer({ ad, className = "", isSidebar = false }: AdRendererProps) {
+    const [isMounted, setIsMounted] = useState(false)
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        setIsMounted(true)
+    }, [])
+
+    useEffect(() => {
+        if (isMounted && ad?.type === 'html' && ad.html_content && containerRef.current) {
+            // Select only scripts within this specific container
+            const scripts = containerRef.current.getElementsByTagName('script')
+            const scriptsArray = Array.from(scripts)
+
+            scriptsArray.forEach((oldScript) => {
+                const newScript = document.createElement('script')
+
+                // Copy all attributes
+                Array.from(oldScript.attributes).forEach(attr => {
+                    newScript.setAttribute(attr.name, attr.value)
+                })
+
+                if (oldScript.src) {
+                    // Prevent duplicate scripts if they are already in the document (like adsbygoogle.js)
+                    const existing = document.querySelector(`script[src="${oldScript.src}"]`)
+                    if (existing) return
+                    newScript.src = oldScript.src
+                } else {
+                    // Wrap execution in a try-catch for AdSense push errors 
+                    // and handle potential multiple pushes
+                    const content = oldScript.textContent || ''
+                    if (content.includes('adsbygoogle')) {
+                        // Prevent duplicate AdSense init
+                        if (document.querySelector('script[data-adsense-init]')) return
+                        newScript.setAttribute('data-adsense-init', 'true')
+                        newScript.textContent = `
+                            try {
+                                if (window.adsbygoogle) {
+                                  (adsbygoogle = window.adsbygoogle || []).push({});
+                                }
+                            } catch (e) {
+                                console.error("AdSense Push Error (Gracefully Handled):", e);
+                            }
+                        `
+                    } else {
+                        // For other inline scripts, check if already injected
+                        const scriptId = `ad-script-${content.length}-${content.substring(0, 20).replace(/[^a-z0-9]/gi, '-')}`
+                        if (document.querySelector(`script[id="${scriptId}"]`)) return
+                        newScript.id = scriptId
+                        newScript.textContent = content
+                    }
+                }
+
+                document.body.appendChild(newScript)
+            })
+        }
+    }, [ad])
+
+    if (!ad) return null
+
+    // Determine dimensions - Optimized for standard ad sizes and container constraints
+    const adWidth = ad.width || (isSidebar ? 336 : 800)
+    const adHeight = ad.height || (isSidebar ? 280 : 400)
+
+    return (
+        <div className={`w-full flex justify-center ${isSidebar ? 'm-0 p-0' : 'overflow-hidden'} not-prose ${className}`}>
+            {ad.type === 'image' && ad.image_url ? (
+                <a
+                    href={ad.link_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block transition-opacity hover:opacity-90 max-w-full"
+                >
+                    {isSidebar ? (
+                        <p className="m-0 p-0 flex justify-center">
+                            <img
+                                src={ad.image_url}
+                                alt={ad.title || ''}
+                                width={ad.width || undefined}
+                                height={ad.height || undefined}
+                                style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
+                            />
+                        </p>
+                    ) : (
+                        <div className="relative w-full aspect-video md:aspect-[3/1] bg-gray-50 border border-gray-100 shadow-sm overflow-hidden">
+                            <Image
+                                src={ad.image_url}
+                                alt={ad.title || 'Advertisement'}
+                                width={adWidth}
+                                height={adHeight}
+                                className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105"
+                                unoptimized
+                            />
+                        </div>
+                    )}
+                </a>
+            ) : ad.type === 'html' && ad.html_content ? (
+                isMounted ? (
+                    <div
+                        ref={containerRef}
+                        className="flex justify-center w-full max-w-full overflow-hidden [&>iframe]:max-w-full [&>img]:max-w-full"
+                        dangerouslySetInnerHTML={{ __html: ad.html_content }}
+                    />
+                ) : (
+                    <div className="flex justify-center items-center min-h-[100px] w-full bg-gray-50 animate-pulse text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                        Loading Ad...
+                    </div>
+                )
+            ) : ad.type === 'product_list' && ad.id ? (
+                <ProductAd adId={ad.id} />
+            ) : null}
+        </div>
+    )
+}
