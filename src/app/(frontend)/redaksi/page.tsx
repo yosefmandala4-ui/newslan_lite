@@ -221,6 +221,7 @@ export default async function RedaksiPage() {
                             "Tanggamus: HALIMI",
                             "Payakumbuh: SUKRI",
                             "Muaro Jambi: DIMAS, SAMSUDIN",
+                            "BUNGO : VERRY SISWANDI",
                             "Blitar: HADI, DAMAR, TRIMO"
                         ]} />
                     </div>
