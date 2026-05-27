@@ -497,6 +497,36 @@ export default function SettingsPage() {
                                 </div>
                                 {settings.active_template === 'cnn' && <Check className="w-4 h-4 text-primary ml-auto" />}
                             </button>
+
+                            <button
+                                onClick={() => setSettings({ ...settings, active_template: 'newspaper' })}
+                                className={`p-4 rounded-xl border-2 transition-all text-left space-y-3 ${settings.active_template === 'newspaper' ? 'border-primary bg-primary/5' : 'border-slate-100 hover:border-slate-200'}`}
+                            >
+                                <div className="aspect-video bg-[#fdfcf7] rounded-lg overflow-hidden relative border border-slate-300">
+                                    <div className="absolute inset-x-2 top-1.5 h-1 border-y border-black/80 flex items-center justify-center">
+                                        <div className="h-[2px] w-6 bg-black" />
+                                    </div>
+                                    <div className="absolute inset-x-2 top-4 flex gap-1.5 bottom-1.5">
+                                        <div className="flex-[2] bg-slate-200 rounded-sm border border-slate-300 flex flex-col p-1 gap-1">
+                                            <div className="h-1/3 bg-slate-300 rounded-sm" />
+                                            <div className="flex-1 space-y-[2px]">
+                                                <div className="h-[2px] bg-slate-400 w-full" />
+                                                <div className="h-[2px] bg-slate-400 w-4/5" />
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 space-y-1">
+                                            <div className="h-2 bg-slate-200 rounded-sm" />
+                                            <div className="h-2 bg-slate-200 rounded-sm" />
+                                            <div className="h-2 bg-slate-200 rounded-sm" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p className="font-bold text-sm">Newspaper Style</p>
+                                    <p className="text-[10px] text-slate-500">Fox/Gazette klasik dengan layout kolom berita cetak.</p>
+                                </div>
+                                {settings.active_template === 'newspaper' && <Check className="w-4 h-4 text-primary ml-auto" />}
+                            </button>
                         </div>
                     </div>
 

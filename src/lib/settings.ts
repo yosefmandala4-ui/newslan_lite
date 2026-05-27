@@ -15,7 +15,7 @@ export interface SiteSettings {
     site_favicon_url: string
     site_url: string
     header_scripts: string
-    active_template: 'tempo' | 'grid' | 'magazine' | 'detik' | 'cnn'
+    active_template: 'tempo' | 'grid' | 'magazine' | 'detik' | 'cnn' | 'newspaper'
     footer_copyright?: string
 }
 
