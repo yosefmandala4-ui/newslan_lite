@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, Eye, Filter, Search, Loader2, FileText } from 'lucide-react'
+import { Plus, Edit2, Trash2, Eye, Filter, Search, Loader2, FileText, Rss } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -101,10 +101,16 @@ export default function AdminArticlesPage() {
                     <h1 className="text-3xl font-black tracking-tighter">Articles</h1>
                     <p className="text-gray-500 text-sm">Manage your news content and articles.</p>
                 </div>
-                <Link href="/admin/articles/new" className="bg-black text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-all shadow-lg shadow-black/10">
-                    <Plus className="w-5 h-5" />
-                    <span>New Article</span>
-                </Link>
+                <div className="flex items-center space-x-3">
+                    <Link href="/admin/articles/rss-grabber" className="bg-white text-gray-700 border border-gray-200 px-6 py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm">
+                        <Rss className="w-5 h-5 text-[#990000]" />
+                        <span>RSS Grabber</span>
+                    </Link>
+                    <Link href="/admin/articles/new" className="bg-black text-white px-6 py-3 rounded-2xl font-bold flex items-center justify-center space-x-2 hover:bg-gray-800 transition-all shadow-lg shadow-black/10">
+                        <Plus className="w-5 h-5" />
+                        <span>New Article</span>
+                    </Link>
+                </div>
             </div>
 
             <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">

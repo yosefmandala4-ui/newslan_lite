@@ -20,6 +20,9 @@ import {
     Search,
     Bell,
     Key,
+    Rss,
+    Clock,
+    TrendingUp,
 } from 'lucide-react'
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -57,6 +60,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const menuItems = [
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
         { name: 'Articles', href: '/admin/articles', icon: FileText },
+        { name: 'Viral AI Generator', href: '/admin/articles/viral-generator', icon: TrendingUp },
+        { name: 'RSS Grabber', href: '/admin/articles/rss-grabber', icon: Rss },
+        { name: 'Auto Jobs (Cron)', href: '/admin/articles/rss-jobs', icon: Clock },
         { name: 'Categories', href: '/admin/categories', icon: Folder },
         { name: 'Menus', href: '/admin/menus', icon: Menu },
         { name: 'Static Pages', href: '/admin/pages', icon: FileText },
