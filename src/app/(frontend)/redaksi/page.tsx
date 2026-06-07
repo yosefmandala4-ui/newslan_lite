@@ -145,7 +145,7 @@ export default async function RedaksiPage() {
                                 <RoleGroup title="Humas / SDM" names={["HARYONO"]} />
                                 <RoleGroup title="Staf Redaksi" names={["TOTOI RUDIYANTO"]} />
                                 <RoleGroup title="Editor" names={["RAJU TRIYANTO"]} />
-                                <RoleGroup title="Tim IT & Desain" names={["FAJAR PAMBUDI", "TOYIB", "DODI WICAKSONO", "RIKI HIDAYAT"]} />
+                                <RoleGroup title="Tim IT & Desain" names={["TOYIB", "DODI WICAKSONO", "RIKI HIDAYAT"]} />
                                 <RoleGroup title="Kontributor" names={["EGI", "EDI", "LUCKY"]} />
                             </div>
                         </div>
