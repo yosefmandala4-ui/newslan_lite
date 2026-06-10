@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Edit2, Trash2, Eye, Filter, Search, Loader2, FileText, Rss } from 'lucide-react'
+import { Plus, Edit2, Trash2, Eye, Filter, Search, Loader2, FileText, Rss, Share2, Check } from 'lucide-react'
 import { Badge } from '@/components/ui/Badge'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -14,6 +14,14 @@ export default function AdminArticlesPage() {
     const [searchTerm, setSearchTerm] = useState('')
     const [selectedIds, setSelectedIds] = useState<string[]>([])
     const [isDeleting, setIsDeleting] = useState(false)
+    const [copiedId, setCopiedId] = useState<string | null>(null)
+
+    const handleCopyLink = (slug: string, id: string) => {
+        const url = `${window.location.origin}/news/${slug}`
+        navigator.clipboard.writeText(url)
+        setCopiedId(id)
+        setTimeout(() => setCopiedId(null), 2000)
+    }
 
     useEffect(() => {
         fetchArticles()
@@ -229,6 +237,13 @@ export default function AdminArticlesPage() {
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end space-x-2">
+                                            <button
+                                                onClick={() => handleCopyLink(article.slug, article.id)}
+                                                className="p-2 hover:bg-gray-100 rounded-xl transition-all text-gray-400 hover:text-green-600"
+                                                title="Copy Article Link"
+                                            >
+                                                {copiedId === article.id ? <Check className="w-4 h-4 text-green-600" /> : <Share2 className="w-4 h-4" />}
+                                            </button>
                                             <Link
                                                 href={`/admin/articles/${article.id}`}
                                                 className="p-2 hover:bg-white hover:shadow-md rounded-xl transition-all text-gray-400 hover:text-black"
@@ -312,6 +327,13 @@ export default function AdminArticlesPage() {
                                         </div>
 
                                         <div className="flex items-center space-x-1">
+                                            <button
+                                                onClick={() => handleCopyLink(article.slug, article.id)}
+                                                className="p-2 hover:bg-gray-100 rounded-lg transition-all text-gray-400 hover:text-green-600"
+                                                title="Copy Article Link"
+                                            >
+                                                {copiedId === article.id ? <Check className="w-4 h-4 text-green-600" /> : <Share2 className="w-4 h-4" />}
+                                            </button>
                                             <Link
                                                 href={`/admin/articles/${article.id}`}
                                                 className="p-2 hover:bg-gray-100 rounded-lg transition-all text-gray-400 hover:text-black"

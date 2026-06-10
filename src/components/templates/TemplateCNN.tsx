@@ -104,9 +104,9 @@ export default function TemplateCNN({
                                     </div>
 
                                     {/* Sub-Hero Row */}
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-x divide-gray-100 pt-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-0 md:divide-x divide-gray-100 pt-4">
                                         {subHeroArticles.map((art, i) => (
-                                            <div key={art.id} className={`group/sub flex gap-3 items-start ${i > 0 ? 'pl-5' : 'pr-5'}`}>
+                                            <div key={art.id} className={`group/sub flex gap-3 items-start ${i > 0 ? 'md:pl-5' : 'md:pr-5'}`}>
                                                 {art.featured_image && (
                                                     <div className="relative w-[72px] h-[54px] shrink-0 overflow-hidden rounded-sm bg-gray-100">
                                                         <Image

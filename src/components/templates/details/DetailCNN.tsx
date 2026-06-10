@@ -99,69 +99,49 @@ export default function DetailCNN({
                     {/* Main Content Area */}
                     <div className="lg:col-span-8">
                         {/* Header Section */}
-                        <header className="mb-10">
+                        <header className="mb-6">
                             <Link
                                 href={`/category/${article.categories?.slug}`}
-                                className="text-red-600 font-black uppercase tracking-widest text-xs mb-4 block hover:underline"
+                                className="text-red-600 font-bold uppercase tracking-widest text-xs mb-3 block hover:underline"
                             >
                                 {article.categories?.name || 'News'}
                             </Link>
-                            <h1 className="text-3xl md:text-5xl lg:text-5xl font-black leading-[1.1] text-gray-900 tracking-tight mb-6">
+                            <h1 className="text-2xl md:text-4xl font-bold font-serif leading-[1.3] text-gray-900 tracking-tight mb-5">
                                 {article.title}
                             </h1>
 
-                            <div className="flex items-center justify-between py-6 border-y border-gray-100 mb-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-red-600">
-                                        <span className="font-black text-lg">{(article.profiles?.full_name || 'R').charAt(0)}</span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <span className="text-sm font-black text-gray-900 leading-tight">
-                                            {article.profiles?.full_name || `Redaksi ${siteSettings.site_name}`}
-                                        </span>
-                                        <div className="flex items-center gap-2 text-xs text-gray-500 font-medium">
-                                            <span>{siteSettings.site_name}</span>
-                                            <span className="w-1 h-1 rounded-full bg-gray-300" />
-                                            <span>{new Date(article.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' })} WIB</span>
+                            <div className="flex items-center gap-4 py-4 border-y border-gray-100 mb-4">
+                                <div className="w-11 h-11 rounded-full bg-gray-50 border border-gray-100 flex items-center justify-center text-red-600 shadow-sm shrink-0">
+                                    <span className="font-bold text-lg">{(article.profiles?.full_name || 'R').charAt(0)}</span>
+                                </div>
+                                <div className="flex flex-col justify-center">
+                                    <span className="text-[15px] font-bold text-gray-900 leading-tight mb-1">
+                                        {article.profiles?.full_name || `Redaksi ${siteSettings.site_name}`}
+                                    </span>
+                                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-500">
+                                        <span className="font-semibold text-gray-700">{siteSettings.site_name}</span>
+                                        <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                        <span>{new Date(article.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace('.', ':')} WIB</span>
+                                        <span className="w-1 h-1 rounded-full bg-gray-300" />
+                                        <div className="flex items-center">
+                                            <Eye className="w-3.5 h-3.5 mr-1" />
+                                            {article.views_count || 0}
                                         </div>
                                     </div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="flex items-center text-xs text-gray-400 font-black uppercase tracking-widest">
-                                        <Eye className="w-3.5 h-3.5 mr-1.5" />
-                                        {article.views_count || 0}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Share & Actions */}
-                            <div className="flex items-center justify-between mb-8">
-                                <SocialShare
-                                    url={currentUrl}
-                                    title={article.title}
-                                    description={article.excerpt || ''}
-                                    siteName={siteSettings.site_name}
-                                />
-                                <div className="flex items-center gap-4">
-                                    <button className="p-2 hover:bg-gray-50 rounded-full transition-colors">
-                                        <Bookmark className="w-5 h-5 text-gray-400" />
-                                    </button>
                                 </div>
                             </div>
                         </header>
 
                         {/* Featured Image */}
-                        <figure className="mb-12 relative">
-                            <div className="relative aspect-[16/9] overflow-hidden rounded-sm bg-gray-100 border border-gray-100">
-                                <Image
+                        <figure className="mb-8 relative">
+                            <div className="relative w-full bg-gray-100 border border-gray-100 rounded-sm overflow-hidden flex justify-center">
+                                <img
                                     src={optimizeCloudinaryUrl(article.featured_image || "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200", { quality: 'auto', width: 1200 })}
                                     alt={article.title}
-                                    fill
-                                    className="object-cover"
-                                    priority
+                                    className="w-full h-auto object-contain"
                                 />
                             </div>
-                            <figcaption className="mt-3 text-xs text-gray-500 italic leading-relaxed border-l-2 border-red-600 pl-3">
+                            <figcaption className="mt-2 text-xs text-gray-500 italic leading-relaxed border-l-2 border-red-600 pl-3">
                                 {article.image_caption || `Foto: Dok. ${siteSettings.site_name}`}
                             </figcaption>
                         </figure>
