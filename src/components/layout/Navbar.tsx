@@ -114,9 +114,21 @@ export default function Navbar({
                             <div className="flex-1 flex justify-start">
                                 <Link href="/" className="flex items-center shrink-0">
                                     {activeTemplate === 'cnn' ? (
-                                        <div className="bg-[#cc0000] px-3 py-1.5 text-white font-bold italic text-lg leading-none flex items-center justify-center tracking-wide">
-                                            {siteName?.split('.')[0] || siteName}
-                                        </div>
+                                        logoType === 'image' && siteLogoUrl ? (
+                                            <div className="relative h-10 w-32 md:h-12 md:w-40 transition-all">
+                                                <NextImage
+                                                    src={siteLogoUrl}
+                                                    alt={siteName}
+                                                    fill
+                                                    className="object-contain object-left"
+                                                    priority
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="bg-[#cc0000] px-3 py-1.5 text-white font-bold italic text-lg leading-none flex items-center justify-center tracking-wide">
+                                                {siteName?.split('.')[0] || siteName}
+                                            </div>
+                                        )
                                     ) : (
                                         <div className="flex flex-col items-start">
                                             {logoType === 'image' && siteLogoUrl ? (
@@ -217,9 +229,20 @@ export default function Navbar({
                                 {/* Mini logo — hanya muncul saat scroll (CNN only) */}
                                 {activeTemplate === 'cnn' && isScrolled && (
                                     <Link href="/" className="shrink-0 mr-4">
-                                        <div className="bg-[#cc0000] px-2.5 py-1 text-white font-bold italic text-sm leading-none">
-                                            {siteName?.split('.')[0] || siteName}
-                                        </div>
+                                        {logoType === 'image' && siteLogoUrl ? (
+                                            <div className="relative h-6 w-20 transition-all">
+                                                <NextImage
+                                                    src={siteLogoUrl}
+                                                    alt={siteName}
+                                                    fill
+                                                    className="object-contain object-left"
+                                                />
+                                            </div>
+                                        ) : (
+                                            <div className="bg-[#cc0000] px-2.5 py-1 text-white font-bold italic text-sm leading-none">
+                                                {siteName?.split('.')[0] || siteName}
+                                            </div>
+                                        )}
                                     </Link>
                                 )}
 
