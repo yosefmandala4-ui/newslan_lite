@@ -3,7 +3,7 @@ import { getSiteSettings } from "@/lib/settings";
 import { Inter, Merriweather } from "next/font/google";
 import "./globals.css";
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 const inter = Inter({ subsets: ["latin"] });
 const merriweather = Merriweather({

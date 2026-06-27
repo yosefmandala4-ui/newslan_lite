@@ -73,22 +73,20 @@ export default function LayoutWrapper({
                 <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
                         <div className="space-y-6">
-                            <Link href="/" className="flex flex-col items-start brightness-0 invert opacity-80">
-                                {logoType === 'image' && siteLogoUrl ? (
-                                    <div className="relative h-12 w-48 transition-all">
-                                        <NextImage
+                            <Link href="/" className="flex flex-col items-start gap-4 brightness-0 invert opacity-80 hover:opacity-100 transition-all">
+                                {siteLogoUrl && (
+                                    <div className="relative h-16 w-16 transition-all">
+                                        <img
                                             src={siteLogoUrl}
-                                            alt={siteName}
-                                            fill
-                                            className="object-contain object-left"
+                                            alt={`${siteName} Logo`}
+                                            className="w-full h-full object-contain object-left"
                                         />
                                     </div>
-                                ) : (
-                                    <span className="text-3xl font-black italic tracking-tighter text-white uppercase leading-none">
-                                        {siteName.split('.')[0]}
-                                        {siteName.includes('.') && <span className="text-primary">.{siteName.split('.')[1]}</span>}
-                                    </span>
                                 )}
+                                <span className="text-3xl font-black italic tracking-tighter text-white uppercase leading-none">
+                                    {siteName.split('.')[0]}
+                                    {siteName.includes('.') && <span className="text-primary">.{siteName.split('.')[1]}</span>}
+                                </span>
                             </Link>
                             <p className="text-sm text-gray-400 leading-relaxed font-medium">
                                 {siteDescription}

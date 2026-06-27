@@ -23,7 +23,7 @@ export const getLatestArticlesTop20 = unstable_cache(
         const supabase = createPublicClient()
         const { data } = await supabase
             .from('articles')
-            .select('*, categories(name, bg_color)')
+            .select('id, title, slug, featured_image, created_at, is_premium, categories(name, bg_color)')
             .eq('is_published', true)
             .order('created_at', { ascending: false })
             .limit(20)
@@ -65,6 +65,8 @@ export const getCategoriesWithNews = unstable_cache(
             .neq('slug', 'uncategorized')
             .order('display_order', { ascending: true })
             .eq('articles.is_published', true)
+            .order('created_at', { foreignTable: 'articles', ascending: false })
+            .limit(6, { foreignTable: 'articles' })
 
         return data
     },
@@ -122,7 +124,7 @@ export const getLatestGridNews = unstable_cache(
         const offset = (page - 1) * itemsPerPage
         const { data, count } = await supabase
             .from('articles')
-            .select('*, categories(name, bg_color)', { count: 'exact' })
+            .select('id, title, slug, featured_image, created_at, is_premium, excerpt, categories(name, bg_color)', { count: 'exact' })
             .eq('is_published', true)
             .order('created_at', { ascending: false })
             .range(offset, offset + itemsPerPage - 1)
@@ -137,7 +139,7 @@ export const getTrendingNews = unstable_cache(
         const supabase = createPublicClient()
         const { data } = await supabase
             .from('articles')
-            .select('*, categories(name, bg_color)')
+            .select('id, title, slug, featured_image, created_at, is_premium, categories(name, bg_color)')
             .eq('is_published', true)
             .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
             .order('views_count', { ascending: false })

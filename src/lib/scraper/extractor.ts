@@ -41,13 +41,13 @@ export async function extractArticleContent(url: string): Promise<ExtractedArtic
 
         // 2. Clean HTML - remove script, style, header, footer, nav, ads, aside
         let cleanHtml = html
-            .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-            .replace(/<style\b[^<]*(?:(?!<\/style>)<[^<]*)*<\/style>/gi, '')
-            .replace(/<nav\b[^<]*(?:(?!<\/nav>)<[^<]*)*<\/nav>/gi, '')
-            .replace(/<header\b[^<]*(?:(?!<\/header>)<[^<]*)*<\/header>/gi, '')
-            .replace(/<footer\b[^<]*(?:(?!<\/footer>)<[^<]*)*<\/footer>/gi, '')
-            .replace(/<aside\b[^<]*(?:(?!<\/aside>)<[^<]*)*<\/aside>/gi, '')
-            .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '');
+            .replace(/<script\b[\s\S]*?<\/script>/gi, '')
+            .replace(/<style\b[\s\S]*?<\/style>/gi, '')
+            .replace(/<nav\b[\s\S]*?<\/nav>/gi, '')
+            .replace(/<header\b[\s\S]*?<\/header>/gi, '')
+            .replace(/<footer\b[\s\S]*?<\/footer>/gi, '')
+            .replace(/<aside\b[\s\S]*?<\/aside>/gi, '')
+            .replace(/<iframe\b[\s\S]*?<\/iframe>/gi, '');
 
         // 3. Extract all paragraph tags content
         const pRegex = /<p\b[^>]*>([\s\S]*?)<\/p>/gi;

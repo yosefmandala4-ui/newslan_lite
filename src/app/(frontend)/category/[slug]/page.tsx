@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { NewsCard } from '@/components/ui/NewsCard'
 import { notFound } from 'next/navigation'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
@@ -11,7 +11,7 @@ interface CategoryPageProps {
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
     const { slug } = await params
-    const supabase = await createClient()
+    const supabase = createPublicClient()
     const { data: category } = await supabase.from('categories').select('*').eq('slug', slug).single()
 
     if (!category) return { title: 'Category Not Found' }
@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 export default async function CategoryPage({ params }: CategoryPageProps) {
     const { slug } = await params
     const settings = await getSiteSettings()
-    const supabase = await createClient()
+    const supabase = createPublicClient()
 
     // Fetch category details
     const { data: category } = await supabase
@@ -44,13 +44,14 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
         notFound()
     }
 
-    // Fetch articles for this category
+    // Fetch articles for this category with limit of 48
     const { data: articles } = await supabase
         .from('articles')
-        .select('*, categories(name)')
+        .select('id, title, slug, featured_image, excerpt, is_premium, created_at, categories(name)')
         .eq('category_id', category.id)
         .eq('is_published', true)
         .order('created_at', { ascending: false })
+        .limit(48)
 
     return (
         <div className="bg-white min-h-screen pb-20">

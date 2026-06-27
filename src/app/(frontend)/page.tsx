@@ -6,7 +6,7 @@ import { Pagination } from '@/components/ui/Pagination'
 import { Zap, TrendingUp, Sparkles, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AdRenderer from '@/components/news/AdRenderer'
 import {
@@ -34,7 +34,7 @@ export default async function HomePage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const supabase = await createClient()
+  const supabase = createPublicClient()
   const params = await searchParams
   const currentPage = Number(params?.page) || 1
   const itemsPerPage = 10

@@ -1,4 +1,4 @@
-import { createClient } from './supabase/server'
+import { createPublicClient } from './supabase/server'
 
 export interface SiteSettings {
     site_name: string
@@ -39,7 +39,7 @@ export const DEFAULT_SETTINGS: SiteSettings = {
 
 export async function getSiteSettings(supabaseClient?: any): Promise<SiteSettings> {
     try {
-        const supabase = supabaseClient || await createClient()
+        const supabase = supabaseClient || createPublicClient()
         const { data, error } = await supabase
             .from('site_settings')
             .select('setting_key, setting_value')

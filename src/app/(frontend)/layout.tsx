@@ -1,5 +1,5 @@
 import LayoutWrapper from '@/components/layout/LayoutWrapper'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { getSiteSettings } from '@/lib/settings'
 
 export default async function FrontendLayout({
@@ -7,7 +7,7 @@ export default async function FrontendLayout({
 }: {
     children: React.ReactNode
 }) {
-    const supabase = await createClient()
+    const supabase = createPublicClient()
     const settings = await getSiteSettings()
 
     // Ambil data langsung tanpa unstable_cache untuk stabilitas di Edge

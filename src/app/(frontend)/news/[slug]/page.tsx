@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/Badge'
 import { NewsCard } from '@/components/ui/NewsCard'
 import { Calendar, User, Share2, Bookmark, Lock, ArrowLeft, Zap, Sparkles, Eye } from 'lucide-react'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import NewsSidebar from '@/components/news/NewsSidebar' // Keep for types if needed, or remove if unused 
 import SocialShare from '@/components/news/SocialShare'
@@ -85,7 +85,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
         // Use standardized helper from @/lib/data
         const siteSettings = await getSiteSettings()
         const activeTemplate = siteSettings.active_template || 'tempo'
-        const supabase = await createClient()
+        const supabase = createPublicClient()
 
         // 1. Fetch MAIN Data (Critical for First Paint)
         // We use cached functions (ISR) for article data to ensure instant load.
