@@ -39,11 +39,11 @@ export async function updateSession(request: NextRequest) {
     // This avoids the 22s getUser() delay on public pages
     if (request.nextUrl.pathname.startsWith('/admin') || request.nextUrl.pathname.startsWith('/auth')) {
         // refreshing the auth token
-        const { data: { user } } = await supabase.auth.getUser()
+        const { data: { session } } = await supabase.auth.getSession()
 
         // Protect admin routes
         if (request.nextUrl.pathname.startsWith('/admin')) {
-            if (!user) {
+            if (!session) {
                 const url = request.nextUrl.clone()
                 url.pathname = '/auth/login'
                 return NextResponse.redirect(url)
