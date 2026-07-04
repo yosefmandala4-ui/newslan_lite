@@ -17,6 +17,7 @@ export interface SiteSettings {
     header_scripts: string
     active_template: 'tempo' | 'grid' | 'magazine' | 'detik' | 'cnn' | 'newspaper'
     footer_copyright?: string
+    ads_txt?: string
 }
 
 export const DEFAULT_SETTINGS: SiteSettings = {
@@ -34,7 +35,8 @@ export const DEFAULT_SETTINGS: SiteSettings = {
     site_favicon_url: '/favicon.ico',
     site_url: '',
     header_scripts: '',
-    active_template: 'tempo'
+    active_template: 'tempo',
+    ads_txt: ''
 }
 
 export async function getSiteSettings(supabaseClient?: any): Promise<SiteSettings> {
@@ -67,6 +69,7 @@ export async function getSiteSettings(supabaseClient?: any): Promise<SiteSetting
             if (item.setting_key === 'header_scripts') settings.header_scripts = item.setting_value
             if (item.setting_key === 'active_template') settings.active_template = item.setting_value as any
             if (item.setting_key === 'footer_copyright') settings.footer_copyright = item.setting_value
+            if (item.setting_key === 'ads_txt') settings.ads_txt = item.setting_value
         })
 
         return settings

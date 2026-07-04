@@ -28,7 +28,8 @@ export default function SettingsPage() {
         site_url: '',
         header_scripts: '',
         active_template: 'tempo',
-        footer_copyright: ''
+        footer_copyright: '',
+        ads_txt: ''
     })
     const [categories, setCategories] = useState<any[]>([])
 
@@ -67,6 +68,7 @@ export default function SettingsPage() {
                 if (item.setting_key === 'header_scripts') s.header_scripts = item.setting_value
                 if (item.setting_key === 'active_template') s.active_template = item.setting_value
                 if (item.setting_key === 'footer_copyright') s.footer_copyright = item.setting_value
+                if (item.setting_key === 'ads_txt') s.ads_txt = item.setting_value
             })
             setSettings(s)
         } catch (error) {
@@ -98,7 +100,8 @@ export default function SettingsPage() {
                 { setting_key: 'site_url', setting_value: settings.site_url },
                 { setting_key: 'header_scripts', setting_value: settings.header_scripts },
                 { setting_key: 'active_template', setting_value: settings.active_template },
-                { setting_key: 'footer_copyright', setting_value: settings.footer_copyright }
+                { setting_key: 'footer_copyright', setting_value: settings.footer_copyright },
+                { setting_key: 'ads_txt', setting_value: settings.ads_txt || '' }
             ]
 
             for (const update of finalUpdates) {
@@ -548,6 +551,29 @@ export default function SettingsPage() {
                                 />
                                 <p className="text-[10px] text-slate-400 mt-1 italic leading-relaxed">
                                     Masukkan tag HTML kustom yang ingin disisipkan ke dalam bagian {` <head> `} website Anda. Berguna untuk Google Analytics, Meta Pixel, atau verifikasi situs lainnya.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Ads.txt Settings */}
+                    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                        <div className="flex items-center space-x-2 text-slate-900 font-bold border-b border-slate-100 pb-4">
+                            <Globe className="w-5 h-5 text-amber-500" />
+                            <span>Verifikasi Ads.txt</span>
+                        </div>
+
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider tracking-widest leading-none mb-1">Konten Ads.txt</label>
+                                <textarea
+                                    value={settings.ads_txt || ''}
+                                    onChange={(e) => setSettings({ ...settings, ads_txt: e.target.value })}
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent transition-all outline-none text-sm font-mono h-40"
+                                    placeholder="google.com, pub-xxxxxxxxxxxxxxxx, DIRECT, f08c47fec0942fa0"
+                                />
+                                <p className="text-[10px] text-slate-400 mt-1 italic leading-relaxed">
+                                    Masukkan baris verifikasi dari Google AdSense atau ad network lain di sini. Format per baris biasanya: <code>domain.com, pub-id, RELATIONSHIP, certification-authority-id</code>.
                                 </p>
                             </div>
                         </div>
