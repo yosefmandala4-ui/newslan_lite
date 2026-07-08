@@ -51,19 +51,39 @@ export default function Navbar({
         timeoutRef[1](t)
     }
 
-    // Fetch articles when category is hovered
+    // Cache to prevent re-fetching the same category data
+    const articleCache = useState<Map<string, any[]>>(() => new Map())[0]
+
+    // Fetch articles when category is hovered (with Debounce)
     useEffect(() => {
         if (!hoveredCat || activeTemplate !== 'cnn') return
+        
+        // If already cached, use cache immediately
+        if (articleCache.has(hoveredCat.slug)) {
+            setMegaMenuArticles(articleCache.get(hoveredCat.slug) || [])
+            setMegaMenuLoading(false)
+            return
+        }
+
         setMegaMenuLoading(true)
         setMegaMenuArticles([])
-        fetch(`/api/articles/by-category?slug=${hoveredCat.slug}&limit=4`)
-            .then(r => r.json())
-            .then(data => {
-                setMegaMenuArticles(Array.isArray(data) ? data : [])
-                setMegaMenuLoading(false)
-            })
-            .catch(() => setMegaMenuLoading(false))
-    }, [hoveredCat, activeTemplate])
+
+        // Debounce timer: wait 300ms before actually fetching
+        const timer = setTimeout(() => {
+            fetch(`/api/articles/by-category?slug=${hoveredCat.slug}&limit=4`)
+                .then(r => r.json())
+                .then(data => {
+                    const articles = Array.isArray(data) ? data : []
+                    articleCache.set(hoveredCat.slug, articles) // save to local cache
+                    setMegaMenuArticles(articles)
+                    setMegaMenuLoading(false)
+                })
+                .catch(() => setMegaMenuLoading(false))
+        }, 300)
+
+        // Cleanup timer if user moves mouse away before 300ms
+        return () => clearTimeout(timer)
+    }, [hoveredCat, activeTemplate, articleCache])
 
     useEffect(() => {
         if (navLinks) {
