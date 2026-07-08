@@ -1,11 +1,4 @@
-import Image from 'next/image'
-import { Badge } from '@/components/ui/Badge'
-import { NewsCard } from '@/components/ui/NewsCard'
-import { Calendar, User, Share2, Bookmark, Lock, ArrowLeft, Zap, Sparkles, Eye } from 'lucide-react'
-import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import SocialShare from '@/components/news/SocialShare'
-import AdRenderer from '@/components/news/AdRenderer'
 import {
     getArticleBySlug,
     getNextArticle,
@@ -21,6 +14,11 @@ import DetailDetik from '@/components/templates/details/DetailDetik'
 import DetailTempo from '@/components/templates/details/DetailTempo'
 import DetailCNN from '@/components/templates/details/DetailCNN'
 import { createPublicClient } from '@/lib/supabase/server'
+
+// ISR: re-render at most once per 60 seconds
+// Cloudflare edge will serve cached HTML for all requests in between
+export const revalidate = 60
+
 
 // Generate Metadata for SEO and Social Sharing
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

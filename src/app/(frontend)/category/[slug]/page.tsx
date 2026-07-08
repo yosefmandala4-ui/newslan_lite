@@ -5,6 +5,8 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import { Metadata } from 'next'
 import { getCachedSiteSettings } from '@/lib/data'
 
+export const revalidate = 60
+
 interface CategoryPageProps {
     params: Promise<{ slug: string }>
 }
