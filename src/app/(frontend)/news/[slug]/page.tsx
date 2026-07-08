@@ -3,29 +3,34 @@ import { Badge } from '@/components/ui/Badge'
 import { NewsCard } from '@/components/ui/NewsCard'
 import { Calendar, User, Share2, Bookmark, Lock, ArrowLeft, Zap, Sparkles, Eye } from 'lucide-react'
 import Link from 'next/link'
-import { createPublicClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
-import NewsSidebar from '@/components/news/NewsSidebar' // Keep for types if needed, or remove if unused 
 import SocialShare from '@/components/news/SocialShare'
 import AdRenderer from '@/components/news/AdRenderer'
-import { getArticleBySlug, getNextArticle, getBanners } from '@/lib/data'
+import {
+    getArticleBySlug,
+    getNextArticle,
+    getBanners,
+    getCachedSiteSettings,
+    getCachedPageAds
+} from '@/lib/data'
 import { optimizeCloudinaryUrl } from '@/lib/utils'
 import PrefetchNextArticle from '@/components/news/PrefetchNextArticle'
 import BannerSlider from '@/components/ui/BannerSlider'
 import { Metadata } from 'next'
-import { getSiteSettings } from '@/lib/settings'
 import DetailDetik from '@/components/templates/details/DetailDetik'
 import DetailTempo from '@/components/templates/details/DetailTempo'
 import DetailCNN from '@/components/templates/details/DetailCNN'
+import { createPublicClient } from '@/lib/supabase/server'
 
 // Generate Metadata for SEO and Social Sharing
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params
 
-    // Use Cached Access (ISR) for fast metadata resolution
-    const article = await getArticleBySlug(slug)
+    const [article, settings] = await Promise.all([
+        getArticleBySlug(slug),
+        getCachedSiteSettings()
+    ])
 
-    const settings = await getSiteSettings()
     let siteUrl = settings.site_url || process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
     // Guard against invalid URLs stored in site_settings (e.g. email addresses)
@@ -82,51 +87,28 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
     try {
         const { slug } = await params
 
-        // Use standardized helper from @/lib/data
-        const siteSettings = await getSiteSettings()
-        const activeTemplate = siteSettings.active_template || 'tempo'
-        const supabase = createPublicClient()
-
-        // 1. Fetch MAIN Data (Critical for First Paint)
-        // We use cached functions (ISR) for article data to ensure instant load.
-        const article = await getArticleBySlug(slug)
+        // All cached — minimal DB hits on repeat requests
+        const [siteSettings, article, pageAds, banners] = await Promise.all([
+            getCachedSiteSettings(),
+            getArticleBySlug(slug),
+            getCachedPageAds(),
+            getBanners()
+        ])
 
         if (!article) {
             return notFound()
         }
 
-        // Parallel fetch for other non-critical or dynamic data
-        // OPTIMIZATION: AUTH & PREMIUM DISABLED (FORCE FAST LOAD)
-        const [
-            pageAdsResult,
-            nextArticle,
-            banners
-        ] = await Promise.all([
-            // Fetch Page Ads (Needed for Content Injection)
-            supabase
-                .from('advertisements')
-                .select('*')
-                .eq('is_active', true)
-                .in('placement', ['article_before', 'article_middle', 'article_after']),
+        // Fetch next article (also cached per article id)
+        const nextArticle = await getNextArticle(article.id)
 
-            // Fetch Next Article for Prefetching
-            getNextArticle(article.id),
-
-            // Fetch Banners for testing
-            getBanners()
-        ])
-
-        // 3. Fire-and-forget View Increment (Non-blocking)
+        // Fire-and-forget view increment (non-blocking, no await)
+        const supabase = createPublicClient()
         supabase.rpc('increment_article_views', { article_id: article.id }).then(({ error }: any) => {
             if (error) console.error('RPC Error:', error)
         })
 
-        // Extract Data
-        const pageAds = pageAdsResult.data
-
-        // Process Products (Removed for lite version)
-        // const products = ...
-
+        const activeTemplate = siteSettings.active_template || 'tempo'
         const currentUrl = `${process.env.NEXT_PUBLIC_SITE_URL || ''}/news/${slug}`
 
         const beforeAd = pageAds?.find((a: any) => a.placement === 'article_before')

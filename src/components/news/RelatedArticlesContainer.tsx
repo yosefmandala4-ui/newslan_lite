@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { Zap } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -17,11 +17,11 @@ export default async function RelatedArticlesContainer({
 }) {
     if (!categoryId) return null
 
-    const supabase = await createClient()
+    const supabase = createPublicClient()
 
     const { data: relatedArticles } = await supabase
         .from('articles')
-        .select('*, categories(name)')
+        .select('id, title, slug, featured_image, excerpt, created_at, categories(name)')
         .eq('is_published', true)
         .eq('category_id', categoryId)
         .neq('id', currentArticleId)

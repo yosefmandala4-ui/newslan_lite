@@ -3,7 +3,7 @@ import { NewsCard } from '@/components/ui/NewsCard'
 import { notFound } from 'next/navigation'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 import { Metadata } from 'next'
-import { getSiteSettings } from '@/lib/settings'
+import { getCachedSiteSettings } from '@/lib/data'
 
 interface CategoryPageProps {
     params: Promise<{ slug: string }>
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export default async function CategoryPage({ params }: CategoryPageProps) {
     const { slug } = await params
-    const settings = await getSiteSettings()
+    const settings = await getCachedSiteSettings()
     const supabase = createPublicClient()
 
     // Fetch category details

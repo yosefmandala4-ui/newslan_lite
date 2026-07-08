@@ -162,12 +162,12 @@ export const searchArticles = async (query: string) => {
     return data
 }
 
-export const getArticleBySlug = unstable_cache(
-    async (slug: string) => {
+export const getArticleBySlug = (slug: string) => unstable_cache(
+    async () => {
         const supabase = createPublicClient()
         const { data, error } = await supabase
             .from('articles')
-            .select('*, categories(id, name), profiles(full_name)')
+            .select('*, categories(id, name, slug), profiles(full_name)')
             .eq('slug', slug)
             .eq('is_published', true)
             .single()
@@ -177,12 +177,12 @@ export const getArticleBySlug = unstable_cache(
         console.warn('[getArticleBySlug] Query failed:', error.message)
         return null
     },
-    ['article-by-slug'],
+    [`article-by-slug-${slug}`],
     { revalidate: REVALIDATE_TIME, tags: ['articles'] }
-)
+)()
 
-export const getNextArticle = unstable_cache(
-    async (currentId: string) => {
+export const getNextArticle = (currentId: string) => unstable_cache(
+    async () => {
         const supabase = createPublicClient()
         const { data } = await supabase
             .from('articles')
@@ -194,9 +194,9 @@ export const getNextArticle = unstable_cache(
             .single()
         return data
     },
-    ['next-article'],
+    [`next-article-${currentId}`],
     { revalidate: REVALIDATE_TIME, tags: ['articles'] }
-)
+)()
 
 export const getIndeksArticles = unstable_cache(
     async (date: string, categoryId?: string) => {
@@ -252,3 +252,85 @@ export const getPageBySlug = unstable_cache(
     ['page-by-slug'],
     { revalidate: REVALIDATE_TIME, tags: ['pages'] }
 )
+
+// Cached layout data — long TTL since rarely changes
+const LAYOUT_REVALIDATE = 120 // 2 minutes
+
+export const getCachedLayoutData = unstable_cache(
+    async () => {
+        const supabase = createPublicClient()
+        const [
+            { data: cats },
+            { data: navLinks },
+            { data: headerAds },
+            { data: skinAds },
+            { data: footerPages }
+        ] = await Promise.all([
+            supabase.from('categories').select('*').order('display_order'),
+            supabase.from('navigation_links').select('*').eq('is_active', true).order('display_order'),
+            supabase.from('advertisements').select('*').eq('placement', 'header_bottom').eq('is_active', true).limit(1),
+            supabase.from('advertisements').select('*').in('placement', ['skin_left', 'skin_right']).eq('is_active', true),
+            supabase.from('pages').select('id, title, slug').eq('is_published', true).eq('is_footer', true).order('title')
+        ])
+        return { cats, navLinks, headerAds, skinAds, footerPages }
+    },
+    ['layout-data'],
+    { revalidate: LAYOUT_REVALIDATE, tags: ['categories', 'navigation', 'ads', 'pages'] }
+)
+
+export const getCachedSiteSettings = unstable_cache(
+    async () => {
+        const supabase = createPublicClient()
+        const { data, error } = await supabase
+            .from('site_settings')
+            .select('setting_key, setting_value')
+
+        const DEFAULT = {
+            site_name: 'Newslan',
+            theme_color: '#0047ba',
+            description: 'Portal berita terpercaya.',
+            default_homepage: '/',
+            logo_type: 'text' as const,
+            site_logo_url: '',
+            default_ai_language: 'id',
+            groq_api_key: '',
+            replicate_api_token: '',
+            contact_whatsapp: '',
+            contact_email: '',
+            site_favicon_url: '/favicon.ico',
+            site_url: '',
+            header_scripts: '',
+            active_template: 'tempo' as const,
+            footer_copyright: '',
+            ads_txt: ''
+        }
+
+        if (error || !data) return DEFAULT
+
+        const settings = { ...DEFAULT }
+        data.forEach((item: any) => {
+            if (item.setting_key in settings || item.setting_key === 'site_description') {
+                const key = item.setting_key === 'site_description' ? 'description' : item.setting_key
+                ;(settings as any)[key] = item.setting_value
+            }
+        })
+        return settings
+    },
+    ['site-settings'],
+    { revalidate: 300, tags: ['settings'] } // Cache 5 menit
+)
+
+export const getCachedPageAds = unstable_cache(
+    async () => {
+        const supabase = createPublicClient()
+        const { data } = await supabase
+            .from('advertisements')
+            .select('*')
+            .eq('is_active', true)
+            .in('placement', ['article_before', 'article_middle', 'article_after'])
+        return data || []
+    },
+    ['page-ads'],
+    { revalidate: REVALIDATE_TIME, tags: ['ads'] }
+)
+

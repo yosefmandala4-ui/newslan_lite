@@ -19,7 +19,7 @@ import {
   getTrendingNews,
   getSidebarAds
 } from '@/lib/data'
-import { getSiteSettings } from '@/lib/settings'
+import { getCachedSiteSettings } from '@/lib/data'
 
 // Import Templates
 import TemplateTempo from '@/components/templates/TemplateTempo'
@@ -40,7 +40,7 @@ export default async function HomePage({
   const itemsPerPage = 10
 
   // Fetch settings for direct redirect and template choice
-  const settings = await getSiteSettings()
+  const settings = await getCachedSiteSettings()
   const defaultHome = settings?.default_homepage
   const activeTemplate = settings?.active_template || 'tempo'
 

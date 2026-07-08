@@ -2,7 +2,6 @@
 
 import { usePathname } from 'next/navigation'
 import Navbar from "./Navbar"
-import BottomNav from "./BottomNav"
 import SkinAds from "./SkinAds"
 import Link from "next/link"
 import NextImage from "next/image"
@@ -64,10 +63,9 @@ export default function LayoutWrapper({
                 hideCategories={pathname.startsWith('/products')}
             />
             <div className={isGamePortal ? "w-full bg-transparent min-h-screen transition-all duration-300" : "boxed-container transition-all duration-300"}>
-                <main className="min-h-screen pb-20 lg:pb-0">
+                <main className="min-h-screen">
                     {children}
                 </main>
-                <BottomNav />
             </div>
             <footer className="bg-[#0f0f0f] text-white border-t border-white/5 py-20 mt-10">
                 <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">

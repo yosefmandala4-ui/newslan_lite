@@ -1,5 +1,4 @@
-import { getIndeksArticles, getAllCategories } from '@/lib/data'
-import { getSiteSettings } from '@/lib/settings'
+import { getIndeksArticles, getAllCategories, getCachedSiteSettings } from '@/lib/data'
 import IndeksHeader from '@/components/news/IndeksHeader'
 import { NewsCard } from '@/components/ui/NewsCard'
 import { format } from 'date-fns'
@@ -23,7 +22,7 @@ export default async function IndeksPage({ searchParams }: IndeksPageProps) {
     const [articles, categories, settings] = await Promise.all([
         getIndeksArticles(date, category),
         getAllCategories(),
-        getSiteSettings()
+        getCachedSiteSettings()
     ])
 
     return (

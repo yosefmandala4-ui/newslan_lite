@@ -1,15 +1,15 @@
-import { createClient } from '@/lib/supabase/server'
+import { createPublicClient } from '@/lib/supabase/server'
 import { getTrendingNews } from '@/lib/data'
 import NewsSidebar from './NewsSidebar'
 
 export default async function NewsSidebarContainer({ currentArticleId }: { currentArticleId: string }) {
-    const supabase = await createClient()
+    const supabase = createPublicClient()
 
     // Fetch Sidebar Data in Parallel
     const [sidebarArticlesResult, trendingNewsResult, sidebarAdsResult] = await Promise.all([
         supabase
             .from('articles')
-            .select('*, categories(name)')
+            .select('id, title, slug, featured_image, created_at, categories(name)')
             .eq('is_published', true)
             .neq('id', currentArticleId)
             .order('created_at', { ascending: false })
