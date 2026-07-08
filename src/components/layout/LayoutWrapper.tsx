@@ -69,7 +69,7 @@ export default function LayoutWrapper({
             </div>
             <footer className="bg-[#0f0f0f] text-white border-t border-white/5 py-20 mt-10">
                 <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
                         <div className="space-y-6">
                             <Link href="/" className="flex flex-col items-start gap-4 brightness-0 invert opacity-80 hover:opacity-100 transition-all">
                                 {logoType === 'image' && siteLogoUrl ? (
@@ -114,14 +114,6 @@ export default function LayoutWrapper({
                             </ul>
                         </div>
 
-                        <div className="space-y-6">
-                            <h4 className="text-xs font-black uppercase tracking-widest text-primary">Layanan</h4>
-                            <ul className="space-y-3 text-sm font-bold">
-                                <li><Link href="/subscribe" className="text-gray-300 hover:text-white transition-colors">Langganan</Link></li>
-                                <li><Link href="/shorts" className="text-gray-300 hover:text-white transition-colors">Video Shorts</Link></li>
-                                <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Kontak</Link></li>
-                            </ul>
-                        </div>
 
                         <div className="space-y-6">
                             <h4 className="text-xs font-black uppercase tracking-widest text-primary">Kontak Kami</h4>
