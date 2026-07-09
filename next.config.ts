@@ -58,12 +58,22 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // News article detail pages — cache 60s, stale ok for 5 min
+        // Static Info Pages (Redaksi, Privacy, dll) — cache 30 HARI (Permanen)
+        source: '/(redaksi|privacy-policy|pedoman-media-siber|contact|subscribe)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=2592000, stale-while-revalidate=86400',
+          },
+        ],
+      },
+      {
+        // News article detail pages — cache 1 HARI penuh
         source: '/news/:slug*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=300',
+            value: 'public, s-maxage=86400, stale-while-revalidate=3600',
           },
         ],
       },
