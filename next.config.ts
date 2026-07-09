@@ -68,12 +68,12 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // News article detail pages — cache 1 HARI penuh
+        // News article detail pages — cache 1 TAHUN (Permanen)
         source: '/news/:slug*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=86400, stale-while-revalidate=3600',
+            value: 'public, s-maxage=31536000, stale-while-revalidate=86400',
           },
         ],
       },
