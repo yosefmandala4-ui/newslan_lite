@@ -5,6 +5,8 @@ import { format } from 'date-fns'
 import { Metadata } from 'next'
 import Breadcrumbs from '@/components/ui/Breadcrumbs'
 
+export const revalidate = 60
+
 export const metadata: Metadata = {
     title: 'Indeks Berita - Portal Berita',
     description: 'Arsip berita harian lengkap berdasarkan tanggal dan kategori.',

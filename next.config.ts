@@ -78,27 +78,37 @@ const nextConfig: NextConfig = {
         ],
       },
       {
-        // Homepage — cache 30s, stale ok for 2 min
+        // Homepage — cache 3 mins (180s)
         source: '/',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=30, stale-while-revalidate=120',
+            value: 'public, s-maxage=180, stale-while-revalidate=300',
           },
         ],
       },
       {
-        // Category pages — cache 60s, stale ok for 5 min
+        // Category pages — cache 5 mins (300s)
         source: '/category/:slug*',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, s-maxage=60, stale-while-revalidate=300',
+            value: 'public, s-maxage=300, stale-while-revalidate=600',
           },
         ],
       },
       {
-        // Search & indeks — shorter cache, content changes often
+        // Indeks page — cache 60s
+        source: '/indeks',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, s-maxage=60, stale-while-revalidate=120',
+          },
+        ],
+      },
+      {
+        // Search — short cache
         source: '/search',
         headers: [
           {

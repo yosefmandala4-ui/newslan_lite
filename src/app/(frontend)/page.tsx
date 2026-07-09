@@ -23,6 +23,8 @@ import { getCachedSiteSettings } from '@/lib/data'
 
 // Import Templates
 import TemplateTempo from '@/components/templates/TemplateTempo'
+
+export const revalidate = 180
 import TemplateGrid from '@/components/templates/TemplateGrid'
 import TemplateMagazine from '@/components/templates/TemplateMagazine'
 import TemplateDetik from '@/components/templates/TemplateDetik'
