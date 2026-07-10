@@ -117,7 +117,18 @@ export default function NewArticlePage() {
                 if (productError) throw productError
             }
 
-            setStatus({ type: 'success', message: 'Artikel berhasil dipublikasikan!' })
+            // Trigger Cloudflare Edge Cache Purge (Terutama untuk membersihkan cache Homepage agar artikel baru langsung muncul)
+            try {
+                fetch('/api/purge-cache', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ slug: data.slug })
+                })
+            } catch (e) {
+                console.error("Purge error", e)
+            }
+
+            setStatus({ type: 'success', message: 'Artikel berhasil dipublikasikan & halaman depan diperbarui!' })
             setTimeout(() => router.push('/admin/articles'), 2000)
         } catch (error: any) {
             setStatus({ type: 'error', message: error.message || 'Gagal menyimpan artikel' })
