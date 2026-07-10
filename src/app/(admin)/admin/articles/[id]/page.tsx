@@ -158,8 +158,18 @@ export default function EditArticlePage({ params }: { params: Promise<{ id: stri
                 )
                 if (productError) throw productError
             }
+            // 3. Trigger Cloudflare Edge Cache Purge in the background
+            try {
+                fetch('/api/purge-cache', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ slug })
+                })
+            } catch (e) {
+                console.error("Purge error", e)
+            }
 
-            setStatus({ type: 'success', message: 'Article updated successfully!' })
+            setStatus({ type: 'success', message: 'Article updated & cache cleared successfully!' })
             setTimeout(() => router.push('/admin/articles'), 2000)
         } catch (error: any) {
             setStatus({ type: 'error', message: error.message || 'Error saving article' })
