@@ -15,9 +15,9 @@ import DetailTempo from '@/components/templates/details/DetailTempo'
 import DetailCNN from '@/components/templates/details/DetailCNN'
 import { createPublicClient } from '@/lib/supabase/server'
 
-// ISR: re-render at most once per 60 seconds
+// ISR: re-render at most once per 5 minutes (300s)
 // Cloudflare edge will serve cached HTML for all requests in between
-export const revalidate = 60
+export const revalidate = 300
 
 
 // Generate Metadata for SEO and Social Sharing
