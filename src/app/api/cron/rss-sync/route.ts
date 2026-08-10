@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { parseRSS } from '@/lib/scraper/rss-parser';
 import { extractArticleContent } from '@/lib/scraper/extractor';
 import { rewriteArticle } from '@/lib/ai/groq';
-import { migrateImageToCloudinary } from '@/app/actions/wordpress-import';
+import { migrateImageToR2 } from '@/app/actions/wordpress-import';
 import { createClient } from '@/lib/supabase/server';
 import { getSiteSettings } from '@/lib/settings';
 
@@ -105,13 +105,13 @@ export async function GET(request: NextRequest) {
                         supabase
                     );
 
-                    // Migrate image to Cloudinary
+                    // Migrate image to R2
                     let imageUrl = '';
                     if (item.thumbnail) {
                         try {
-                            imageUrl = await migrateImageToCloudinary(item.thumbnail);
+                            imageUrl = await migrateImageToR2(item.thumbnail);
                         } catch (imgErr: any) {
-                            console.error(`Gagal mengunggah thumbnail ke Cloudinary: ${imgErr.message}`);
+                            console.error(`Gagal mengunggah thumbnail ke R2: ${imgErr.message}`);
                             imageUrl = item.thumbnail; // fallback
                         }
                     }

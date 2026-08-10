@@ -42,37 +42,19 @@ function formatSingleValue(val: string): string {
 }
 
 /**
- * Optimizes Cloudinary URLs by injecting f_auto,q_auto and optional params
+ * Optimizes image URLs. Previously used for Cloudinary, now passes through R2 URLs.
+ * If you enable Cloudflare Image Resizing, you can format the URL here.
  */
 export function optimizeCloudinaryUrl(
     url: string,
     options?: { width?: number; quality?: string }
 ): string {
-    if (!url || !url.includes('cloudinary.com')) return url
-
-    // Helper to build transformation string
-    const transforms = ['f_auto']
-
-    // Quality (default to q_auto if not specified, or use provided like 'q_auto:eco')
-    transforms.push(options?.quality ? `q_${options.quality}` : 'q_auto')
-
-    // Width (if specified)
-    if (options?.width) {
-        transforms.push(`w_${options.width}`)
-        transforms.push('c_limit') // Ensure we don't upscale, just limit
-    }
-
-    const transformString = transforms.join(',')
-
-    // If already has some optimization (basic check), we might want to replace or just append?
-    // For simplicity, this regex replaces the first /upload/ with /upload/{transforms}/
-    // It does NOT handle if there are already params there cleanly without more complex parsing,
-    // but for standard Cloudinary URLs it works.
-    if (url.includes('/upload/')) {
-        // Remove existing widespread optimizations if any to avoid duplication/conflict if we are strict
-        // But here we'll just replace /upload/ with our new set.
-        return url.replace('/upload/', `/upload/${transformString}/`)
-    }
+    if (!url) return url
+    
+    // If it's still a Cloudinary URL, we can strip the transformations or apply them.
+    // Since we are migrating, we will just return the URL as is.
+    // If you enable Cloudflare Image Resizing in the future, you can implement the resizing logic here.
+    // Example: return `https://your-domain.com/cdn-cgi/image/width=${options?.width || 'auto'},quality=${options?.quality || 'auto'}/${url}`
 
     return url
 }

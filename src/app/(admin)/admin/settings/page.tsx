@@ -10,6 +10,8 @@ export default function SettingsPage() {
     const [loading, setLoading] = useState(true)
     const [saving, setSaving] = useState(false)
     const [uploading, setUploading] = useState(false)
+    const [migratingR2, setMigratingR2] = useState(false)
+    const [migrationLog, setMigrationLog] = useState<string[]>([])
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
 
     const [settings, setSettings] = useState({
@@ -134,6 +136,45 @@ export default function SettingsPage() {
             setMessage({ type: 'error', text: error.message || 'Gagal mengunggah logo' })
         } finally {
             setUploading(false)
+        }
+    }
+
+    async function handleMigrateR2() {
+        if (!confirm('Anda yakin ingin memulai migrasi gambar dari Cloudinary ke R2 sekarang? Proses ini akan memakan waktu tergantung jumlah artikel Anda.')) return
+        
+        try {
+            setMigratingR2(true)
+            setMigrationLog(['🚀 Memulai proses migrasi gambar ke R2...'])
+            
+            let hasMore = true
+            let batch = 1
+            
+            while (hasMore) {
+                setMigrationLog(prev => [...prev, `\n⏳ Menjalankan proses Batch ${batch} (5 artikel)...`])
+                
+                const res = await fetch('/api/admin/migrate-r2', { method: 'POST' })
+                const data = await res.json()
+                
+                if (res.status === 401) {
+                    setMigrationLog(prev => [...prev, "❌ Gagal: Anda belum login atau sesi telah habis."])
+                    break
+                }
+                
+                setMigrationLog(prev => [...prev, data.message])
+                if (data.log && data.log.length > 0) {
+                    setMigrationLog(prev => [...prev, ...data.log])
+                }
+                
+                hasMore = data.hasMore
+                batch++
+                
+                if (hasMore) await new Promise(resolve => setTimeout(resolve, 2000))
+            }
+            setMigrationLog(prev => [...prev, "\n🎉 Proses migrasi sepenuhnya SELESAI!"])
+        } catch (err: any) {
+            setMigrationLog(prev => [...prev, `❌ Terjadi kesalahan: ${err.message}`])
+        } finally {
+            setMigratingR2(false)
         }
     }
 
@@ -694,6 +735,42 @@ export default function SettingsPage() {
                         </div>
                     </div>
                 </div>
+                
+                {/* Migrasi R2 Settings */}
+                <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+                    <div className="flex items-center space-x-2 text-slate-900 font-bold border-b border-slate-100 pb-4">
+                        <Upload className="w-5 h-5 text-indigo-500" />
+                        <span>Migrasi Cloudinary ke R2</span>
+                    </div>
+
+                    <div className="space-y-4">
+                        <p className="text-xs text-slate-500">Alat ini akan secara otomatis memindahkan semua gambar artikel lama Anda dari Cloudinary ke penyimpanan Cloudflare R2 yang baru. Pastikan Anda telah mengatur API Key R2 di konfigurasi sistem.</p>
+                        
+                        <button
+                            onClick={handleMigrateR2}
+                            disabled={migratingR2}
+                            className="w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
+                        >
+                            {migratingR2 ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Sedang Memigrasi...
+                                </>
+                            ) : (
+                                <>
+                                    Mulai Migrasi Gambar
+                                </>
+                            )}
+                        </button>
+                        
+                        {migrationLog.length > 0 && (
+                            <div className="mt-4 p-4 bg-slate-900 text-slate-300 text-xs font-mono rounded-xl max-h-60 overflow-y-auto whitespace-pre-wrap leading-relaxed">
+                                {migrationLog.join('\n')}
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
 
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6 sticky top-24">

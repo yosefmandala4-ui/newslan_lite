@@ -1,13 +1,8 @@
 'use server'
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
+import { v4 as uuidv4 } from 'uuid'
 
-export async function migrateImageToCloudinary(imageUrl: string) {
-    const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME
-    const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
-
-    if (!cloudName || !uploadPreset) {
-        throw new Error('Cloudinary credentials missing. Please set NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME and NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET in .env.local.')
-    }
-
+export async function migrateImageToR2(imageUrl: string) {
     try {
         // 1. Fetch the image from WordPress server-side
         const response = await fetch(imageUrl)
@@ -15,30 +10,40 @@ export async function migrateImageToCloudinary(imageUrl: string) {
 
         const arrayBuffer = await response.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
+        const contentType = response.headers.get('content-type') || 'image/jpeg'
 
-        // 2. Prepare FormData for Cloudinary
-        const formData = new FormData()
-        // Convert buffer to Blob for FormData
-        const blob = new Blob([buffer])
-        formData.append('file', blob)
-        formData.append('upload_preset', uploadPreset)
+        // 2. Upload to R2
+        const accountId = process.env.R2_ACCOUNT_ID
+        const accessKeyId = process.env.R2_ACCESS_KEY_ID
+        const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY
+        const bucketName = process.env.R2_BUCKET_NAME
+        const publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
 
-        // 3. Upload to Cloudinary
-        const uploadResponse = await fetch(
-            `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-            {
-                method: 'POST',
-                body: formData,
-            }
-        )
-
-        const data = await uploadResponse.json()
-
-        if (!uploadResponse.ok) {
-            throw new Error(data.error?.message || 'Error uploading to Cloudinary')
+        if (!accountId || !accessKeyId || !secretAccessKey || !bucketName || !publicUrl) {
+             throw new Error('R2 credentials missing in .env.local.')
         }
 
-        return data.secure_url
+        const s3Client = new S3Client({
+            region: 'auto',
+            endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+            credentials: {
+                accessKeyId,
+                secretAccessKey,
+            }
+        })
+
+        const fileExtension = contentType.split('/')[1] || 'jpg'
+        const fileName = `imports/${Date.now()}-${uuidv4()}.${fileExtension}`
+
+        await s3Client.send(new PutObjectCommand({
+            Bucket: bucketName,
+            Key: fileName,
+            Body: buffer,
+            ContentType: contentType,
+        }))
+
+        const cleanPublicUrl = publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl
+        return `${cleanPublicUrl}/${fileName}`
     } catch (error: any) {
         console.error('Server-side Image Migration Error:', error)
         throw error

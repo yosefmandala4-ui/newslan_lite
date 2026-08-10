@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { extractArticleContent } from '@/lib/scraper/extractor';
 import { rewriteArticle } from '@/lib/ai/groq';
-import { migrateImageToCloudinary } from '@/app/actions/wordpress-import';
+import { migrateImageToR2 } from '@/app/actions/wordpress-import';
 import { createClient } from '@/lib/supabase/server';
 
 function slugify(text: string): string {
@@ -50,14 +50,14 @@ export async function POST(request: NextRequest) {
             supabase
         );
 
-        // 5. Migrate image to Cloudinary (if present)
+        // 5. Migrate image to R2 (if present)
         let featuredImage = '';
         if (thumbnail) {
             try {
-                console.log(`[RSS Import] Migrating thumbnail to Cloudinary: ${thumbnail}`);
-                featuredImage = await migrateImageToCloudinary(thumbnail);
+                console.log(`[RSS Import] Migrating thumbnail to R2: ${thumbnail}`);
+                featuredImage = await migrateImageToR2(thumbnail);
             } catch (err: any) {
-                console.error('[RSS Import] Failed to upload image to Cloudinary, fallback to original:', err.message);
+                console.error('[RSS Import] Failed to upload image to R2, fallback to original:', err.message);
                 featuredImage = thumbnail;
             }
         }
