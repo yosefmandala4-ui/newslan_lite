@@ -200,7 +200,8 @@ export default async function RedaksiPage() {
                             "Kabiro Kota Jambi: RAHMAD ADE SUBRATA",
                             "Kabiro Muaro Jambi: JOKO SURONO",
                             "Kabiro Solok: RUBIYANTO",
-                            "Kabiro Pesisir Selatan: AMIN"
+                            "Kabiro Pesisir Selatan: AMIN",
+                            "Kabiro Pringsewu: MUHAMMAD KABUL MULIARTO"
                         ]} />
                         <RegionGroup title="Tim Hukum" list={[
                             "1. M. ALEX ALNEMERI, S.H, MH",
@@ -213,7 +214,7 @@ export default async function RedaksiPage() {
                         ]} />
                         <RegionGroup title="Wartawan & Reporter Daerah" list={[
                             "Provinsi Jambi: SUNARDI, MUJIONO, TRI MAKNO, WIBOWO",
-                            "Merangin: DAMHURI, ALI AMRAN, DEDI MULYADI, JUMADI, M ZAINUDDIN",
+                            "Merangin: DAMHURI, ALI AMRAN, DEDI MULYADI, JUMADI, M ZAINUDDIN, TRIONO AZIZ",
                             "Sarolangun: RISNADI, LUTH ISMAIL, RITA, FEBRI, SEHON, HARUN, ROODY",
                             "Muratara: SHAMSU",
                             "Solok Selatan: ADITYA",
@@ -222,7 +223,9 @@ export default async function RedaksiPage() {
                             "Payakumbuh: SUKRI",
                             "Muaro Jambi: DIMAS, SAMSUDIN",
                             "BUNGO : VERRY SISWANDI",
-                            "Blitar: HADI, DAMAR, TRIMO"
+                            "Blitar: HADI, DAMAR, TRIMO",
+                            "Lampung Selatan: MUHIBBUN",
+                            "Yogyakarta: INDRA GUNAWAN"
                         ]} />
                     </div>
                 </section>
