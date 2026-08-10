@@ -7,12 +7,17 @@ export async function POST(request: NextRequest) {
         const supabase = await createClient();
         const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-        // Basic admin check (adjust based on your exact admin logic)
         if (authError || !user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        // Only process 5-10 at a time to prevent server timeout
+        // Parse offset from request if available
+        let offset = 0;
+        try {
+            const body = await request.json();
+            if (body.offset) offset = body.offset;
+        } catch(e) {}
+
         const BATCH_SIZE = 5;
 
         // Find articles with Cloudinary URLs
@@ -20,7 +25,7 @@ export async function POST(request: NextRequest) {
             .from('articles')
             .select('id, title, featured_image')
             .like('featured_image', '%res.cloudinary.com%')
-            .limit(BATCH_SIZE);
+            .range(offset, offset + BATCH_SIZE - 1);
 
         if (fetchError) throw fetchError;
 
