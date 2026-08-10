@@ -734,7 +734,6 @@ export default function SettingsPage() {
                             </div>
                         </div>
                     </div>
-                </div>
                 
                 {/* Migrasi R2 Settings */}
                 <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
