@@ -5,8 +5,12 @@ import { v4 as uuidv4 } from 'uuid'
 export async function migrateImageToR2(imageUrl: string) {
     try {
         // 1. Fetch the image from WordPress server-side
-        const response = await fetch(imageUrl)
-        if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText}`)
+        const response = await fetch(imageUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+            }
+        })
+        if (!response.ok) throw new Error(`Failed to fetch image: ${response.statusText} (${response.status}) - ${imageUrl}`)
 
         const arrayBuffer = await response.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
