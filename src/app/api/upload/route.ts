@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuidv4 } from 'uuid'
 
+// Trigger new Cloudflare Pages deployment to load environment variables
 export async function POST(request: Request) {
     console.log("=== START UPLOAD REQUEST ===");
     try {
