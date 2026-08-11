@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuidv4 } from 'uuid'
 
+export const runtime = 'edge'
+
 export async function POST(request: Request) {
     try {
         const formData = await request.formData()
@@ -31,7 +33,8 @@ export async function POST(request: Request) {
             }
         })
 
-        const buffer = Buffer.from(await file.arrayBuffer())
+        const arrayBuffer = await file.arrayBuffer()
+        const bodyData = new Uint8Array(arrayBuffer)
         const fileExtension = file.name.split('.').pop() || 'webp'
         
         // Generate a unique filename using timestamp and uuid to prevent collisions
@@ -40,7 +43,7 @@ export async function POST(request: Request) {
         await s3Client.send(new PutObjectCommand({
             Bucket: bucketName,
             Key: fileName,
-            Body: buffer,
+            Body: bodyData,
             ContentType: file.type,
         }))
 
