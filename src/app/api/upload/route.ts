@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 import { v4 as uuidv4 } from 'uuid'
+import { AwsClient } from 'aws4fetch'
 
 // Trigger new Cloudflare Pages deployment to load environment variables
 export async function POST(request: Request) {
@@ -28,15 +28,13 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'R2 Storage credentials are not configured in environment variables' }, { status: 500 })
         }
 
-        console.log("Initializing S3Client...");
-        const s3Client = new S3Client({
+        console.log("Initializing AwsClient (aws4fetch)...");
+        const aws = new AwsClient({
+            accessKeyId: accessKeyId,
+            secretAccessKey: secretAccessKey,
+            service: 's3',
             region: 'auto',
-            endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-            credentials: {
-                accessKeyId,
-                secretAccessKey,
-            }
-        })
+        });
 
         console.log("Converting file to array buffer...");
         const arrayBuffer = await file.arrayBuffer()
@@ -46,12 +44,20 @@ export async function POST(request: Request) {
         const fileName = `${folder}/${Date.now()}-${uuidv4()}.${fileExtension}`
         console.log("Uploading to bucket:", bucketName, "with key:", fileName);
 
-        await s3Client.send(new PutObjectCommand({
-            Bucket: bucketName,
-            Key: fileName,
-            Body: bodyData,
-            ContentType: file.type,
-        }))
+        const url = new URL(`https://${bucketName}.${accountId}.r2.cloudflarestorage.com/${fileName}`);
+        
+        const response = await aws.fetch(url.toString(), {
+            method: 'PUT',
+            body: bodyData,
+            headers: {
+                'Content-Type': file.type,
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`R2 Upload Failed (${response.status}): ${errorText}`);
+        }
 
         const cleanPublicUrl = publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl
         const secure_url = `${cleanPublicUrl}/${fileName}`
