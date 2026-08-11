@@ -17,18 +17,11 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'No file provided' }, { status: 400 })
         }
 
-        const accountId = process.env.R2_ACCOUNT_ID
-        const accessKeyId = process.env.R2_ACCESS_KEY_ID
-        const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY
-        const bucketName = process.env.R2_BUCKET_NAME
-        const publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL
-
-        console.log("Checking Environment Variables:");
-        console.log("- R2_ACCOUNT_ID exists:", !!accountId);
-        console.log("- R2_ACCESS_KEY_ID exists:", !!accessKeyId);
-        console.log("- R2_SECRET_ACCESS_KEY exists:", !!secretAccessKey);
-        console.log("- R2_BUCKET_NAME exists:", !!bucketName);
-        console.log("- NEXT_PUBLIC_R2_PUBLIC_URL exists:", !!publicUrl);
+        const accountId = process.env.R2_ACCOUNT_ID || "481216d261759cebfd2334794cecef53";
+        const accessKeyId = process.env.R2_ACCESS_KEY_ID || "8fcb48f4f771d1c30a117d9622a83c86";
+        const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || "35c106b35b3c3fb47f7aa4388c10e6211b79939afb90bbbfed548188cb6bb26b";
+        const bucketName = process.env.R2_BUCKET_NAME || "newslan-lite";
+        const publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "https://pub-8ccc1f5bcc3545b7a43e239907bd6a4a.r2.dev";
 
         if (!accountId || !accessKeyId || !secretAccessKey || !bucketName || !publicUrl) {
             console.error("Upload failed: Missing credentials");
