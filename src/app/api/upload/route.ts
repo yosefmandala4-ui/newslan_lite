@@ -21,7 +21,8 @@ export async function POST(request: Request) {
         const accessKeyId = process.env.R2_ACCESS_KEY_ID || "8fcb48f4f771d1c30a117d9622a83c86";
         const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY || "35c106b35b3c3fb47f7aa4388c10e6211b79939afb90bbbfed548188cb6bb26b";
         const bucketName = process.env.R2_BUCKET_NAME || "newslan-lite";
-        const publicUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_URL || "https://media.newslan.id";
+        // FORCING media.newslan.id so it doesn't accidentally use the old .dev url from Cloudflare settings
+        const publicUrl = "https://media.newslan.id";
 
         if (!accountId || !accessKeyId || !secretAccessKey || !bucketName || !publicUrl) {
             console.error("Upload failed: Missing credentials");
