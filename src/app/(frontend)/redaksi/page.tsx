@@ -167,8 +167,8 @@ export default async function RedaksiPage() {
                         <RegionGroup title="Kaperwil & Korwil" list={[
                             "Korwil Riau: SUTONO",
                             "Korwil Sumatera: SUKARNO",
-                            "Korwil Jateng/DIY: MUJIBURAHMAN",                            
-                            "Korwil Sumatera Utara: MUHAMMAD ZAINUL ARIFIN",                            
+                            "Korwil Jateng/DIY: MUJIBURAHMAN",
+                            "Korwil Sumatera Utara: MUHAMMAD ZAINUL ARIFIN",
                             "Kaperwil Sumsel: YATIYO"
                         ]} />
                         <RegionGroup title="Kepala Biro (Kabiro)" list={[
@@ -186,7 +186,7 @@ export default async function RedaksiPage() {
                             "Kabiro Karang Asem: I GEDE SUPARTA",
                             "Kabiro Tanggamus: HERRY ANGKASA",
                             "Kabiro Majalengka: AGUS",
-                            "Kabiro Lampung Timur: SELAMET",                            
+                            "Kabiro Lampung Timur: SELAMET",
                             "Kabiro Sukabumi: SAPTA HENDRA W",
                             "Kabiro Payakumbuh: RIKI HIDAYAT",
                             "Kabiro Muratara: EDIYANTO",
