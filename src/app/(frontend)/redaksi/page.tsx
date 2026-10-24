@@ -219,7 +219,8 @@ export default async function RedaksiPage() {
                         ]} />
                         <RegionGroup title="Wartawan & Reporter Daerah" list={[
                             "Provinsi Jambi: SUNARDI, MUJIONO, TRI MAKNO, WIBOWO",
-                            "Merangin: DAMHURI, ALI AMRAN, DEDI MULYADI, JUMADI, M ZAINUDDIN, TRIONO AZIZ",
+                            "Kota Jambi: RACHMAD",
+                            "Merangin: DAMHURI, ALI AMRAN, DEDI MULYADI, JUMADI, M ZAINUDDIN, TRIONO AZIZ, NIPSUL AMAR",
                             "Sarolangun: RISNADI, LUTH ISMAIL, RITA, FEBRI, SEHON, HARUN, ROODY",
                             "Muratara: SHAMSU",
                             "Solok Selatan: ADITYA",
