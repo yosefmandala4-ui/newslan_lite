@@ -119,7 +119,15 @@ export default async function RedaksiPage() {
                             <div className="space-y-4">
                                 <RoleGroup title="Pendiri" names={["SUKARLAN", "AGUSTIN IDA ERNIWATI"]} />
                                 <RoleGroup title="Dewan Pembina" names={["JENDERAL ANDIKA PERKASA, S.E., M.A., M.SC., M.PHIL, PH.D"]} />
-                                <RoleGroup title="Dewan Penasehat" names={["H. AL HARIS", "GANJAR PRANOWO", "KOMBES IRWAN ANDY PURNAMAWAN", "KOLONEL INF TOMI RADYA DIANSYAH LUBIS", "KURNIADI HIDAYAT", "TONI IRWAN JAYA"]} />
+                                <RoleGroup title="Dewan Penasehat" names={[
+                                    "H. AL HARIS",
+                                    "GANJAR PRANOWO",
+                                    "Ir. Drs. DJOKO SETIJOWARNO, MT",
+                                    "KOMBES IRWAN ANDY PURNAMAWAN",
+                                    "KOLONEL INF TOMI RADYA DIANSYAH LUBIS",
+                                    "KURNIADI HIDAYAT",
+                                    "TONI IRWAN JAYA"
+                                ]} />
                             </div>
                         </div>
 
